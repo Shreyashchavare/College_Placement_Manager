@@ -3,14 +3,34 @@ function getApiBase() {
   if (!envUrl || envUrl === '/api') {
     return '/api';
   }
-  let url = envUrl;
-  if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('/')) {
-    url = `https://${url}`;
+
+  // Remove trailing slashes and '/api' suffix if present for clean processing
+  let clean = envUrl.replace(/\/api\/?$/, '').replace(/\/+$/, '');
+
+  // Extract protocol if provided
+  let protocol = 'https://';
+  if (clean.startsWith('http://')) {
+    protocol = 'http://';
+    clean = clean.substring(7);
+  } else if (clean.startsWith('https://')) {
+    protocol = 'https://';
+    clean = clean.substring(8);
   }
-  if (url.startsWith('http')) {
-    return url.endsWith('/api') ? url : (url.endsWith('/') ? `${url}api` : `${url}/api`);
+
+  // If it's a relative path (e.g. starts with /), return it
+  if (clean.startsWith('/')) {
+    return `${clean}/api`;
   }
-  return url;
+
+  // If the hostname doesn't contain a dot '.' and is not 'localhost',
+  // it is a Render internal service name (e.g. 'placement-backend-ce17') which needs '.onrender.com'
+  // for public browser access.
+  const hostPart = clean.split(':')[0].split('/')[0];
+  if (!hostPart.includes('.') && !hostPart.toLowerCase().startsWith('localhost')) {
+    clean = `${clean}.onrender.com`;
+  }
+
+  return `${protocol}${clean}/api`;
 }
 
 const API_BASE = getApiBase();
@@ -34,7 +54,7 @@ async function request(endpoint, options = {}) {
       headers,
     });
   } catch (netErr) {
-    throw new Error(`Cannot connect to backend server at ${API_BASE}. Please ensure backend is running.`);
+    throw new Error(`Cannot connect to backend server at ${API_BASE}. Note: Render free tier services may take 30-50s to wake up on first request. Please wait a moment and try again.`);
   }
 
   if (response.status === 204) {
