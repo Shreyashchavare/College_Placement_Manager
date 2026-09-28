@@ -21,15 +21,18 @@ export function StudentDashboardView({ onNavigate }) {
 
   useEffect(() => {
     const loadDashboard = async () => {
-      if (!user?.studentId) return;
+      if (!user?.studentId) {
+        setLoading(false);
+        return;
+      }
       try {
         setLoading(true);
         const [profData, statsData] = await Promise.all([
           api.getStudentById(user.studentId),
           api.getStudentDashboard(user.studentId),
         ]);
-        setProfile(profData);
-        setStats(statsData);
+        setProfile(profData || {});
+        setStats(statsData || {});
       } catch (err) {
         setError(err.message || 'Failed to load dashboard');
       } finally {
@@ -40,7 +43,7 @@ export function StudentDashboardView({ onNavigate }) {
   }, [user]);
 
   if (loading) {
-    return <div style={{ padding: '3rem', textAlign: 'center' }}>Loading your student profile & dashboard...</div>;
+    return <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading your student profile & dashboard...</div>;
   }
 
   return (

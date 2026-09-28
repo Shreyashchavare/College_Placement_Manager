@@ -71,7 +71,7 @@ export function DrivesView() {
   const handleOpenAdd = () => {
     setEditingDrive(null);
     setFormData({
-      companyId: companies.length > 0 ? companies[0].id : '',
+      companyId: (companies && companies.length > 0 && companies[0]?.id) ? companies[0].id : '',
       title: '',
       jobRole: '',
       jobDescription: '',
@@ -337,11 +337,11 @@ export function DrivesView() {
                   </tr>
                 </thead>
                 <tbody>
-                  {eligibleStudents.length === 0 ? (
+                  {(!eligibleStudents || eligibleStudents.length === 0) ? (
                     <tr><td colSpan="6" style={{ textAlign: 'center', padding: '1.5rem', color: 'var(--text-secondary)' }}>No students currently meet this drive's criteria.</td></tr>
                   ) : (
-                    eligibleStudents.map((st) => (
-                      <tr key={st.id}>
+                    eligibleStudents?.filter(Boolean).map((st) => (
+                      <tr key={st?.id}>
                         <td style={{ fontWeight: 700 }}>{st.rollNumber}</td>
                         <td>{st.fullName}</td>
                         <td><span className="badge badge-draft">{st.department}</span></td>
