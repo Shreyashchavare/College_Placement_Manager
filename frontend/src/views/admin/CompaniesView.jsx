@@ -117,8 +117,8 @@ export function CompaniesView() {
         ) : companies.length === 0 ? (
           <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>No companies registered yet.</div>
         ) : (
-          companies.map((c) => (
-            <div key={c.id} className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          companies?.filter(Boolean).map((c) => (
+            <div key={c?.id} className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>
                 <div className="flex-between mb-2">
                   <div style={{ width: '42px', height: '42px', borderRadius: '10px', background: '#e0e7ff', color: '#4f46e5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -128,17 +128,17 @@ export function CompaniesView() {
                     <button onClick={() => handleOpenEdit(c)} className="btn btn-outline btn-sm" title="Edit Company">
                       <Edit2 size={13} />
                     </button>
-                    <button onClick={() => handleDelete(c.id)} className="btn btn-outline btn-sm" style={{ color: '#ef4444' }} title="Delete Company">
+                    <button onClick={() => handleDelete(c?.id)} className="btn btn-outline btn-sm" style={{ color: '#ef4444' }} title="Delete Company">
                       <Trash2 size={13} />
                     </button>
                   </div>
                 </div>
 
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.25rem' }}>{c.name}</h3>
-                <span className="badge badge-draft" style={{ marginBottom: '0.75rem' }}>{c.industry || 'Tech'}</span>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.25rem' }}>{c?.name}</h3>
+                <span className="badge badge-draft" style={{ marginBottom: '0.75rem' }}>{c?.industry || 'Tech'}</span>
 
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem', minHeight: '40px' }}>
-                  {c.description || 'No company description provided.'}
+                  {c?.description || 'No company description provided.'}
                 </p>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.825rem', color: 'var(--text-secondary)', borderTop: '1px solid var(--border-light)', paddingTop: '0.75rem' }}>

@@ -175,8 +175,8 @@ export function StudentsView() {
             ) : filtered.length === 0 ? (
               <tr><td colSpan="8" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>No students found matching your filters.</td></tr>
             ) : (
-              filtered.map((s) => (
-                <tr key={s.id}>
+              filtered?.filter(Boolean).map((s) => (
+                <tr key={s?.id}>
                   <td>
                     <span style={{ fontWeight: 700, color: 'var(--primary)' }}>{s.rollNumber}</span>
                   </td>

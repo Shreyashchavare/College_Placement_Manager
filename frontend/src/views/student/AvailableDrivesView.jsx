@@ -28,12 +28,14 @@ export function AvailableDrivesView({ onNavigate }) {
     try {
       setLoading(true);
       const openDrives = await api.getOpenDrives();
-      setDrives(openDrives);
+      const validDrives = Array.isArray(openDrives) ? openDrives.filter(Boolean) : [];
+      setDrives(validDrives);
 
       // Check eligibility for each drive in parallel
       const map = {};
       await Promise.all(
-        openDrives.map(async (d) => {
+        validDrives.map(async (d) => {
+          if (!d?.id) return;
           try {
             const check = await api.checkEligibility(d.id, user.studentId);
             map[d.id] = check;
@@ -98,7 +100,8 @@ export function AvailableDrivesView({ onNavigate }) {
             No placement drives are currently accepting applications.
           </div>
         ) : (
-          drives.map((d) => {
+          drives?.filter(Boolean).map((d) => {
+            if (!d?.id) return null;
             const eligibility = eligibilityMap[d.id] || { eligible: false, reasons: [] };
             const isEligible = eligibility.eligible;
             const alreadyApplied = eligibility.alreadyApplied;

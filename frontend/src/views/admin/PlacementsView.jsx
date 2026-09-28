@@ -96,8 +96,8 @@ export function PlacementsView() {
             ) : placements.length === 0 ? (
               <tr><td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>No placements recorded yet.</td></tr>
             ) : (
-              placements.map((p) => (
-                <tr key={p.id}>
+              placements?.filter(Boolean).map((p) => (
+                <tr key={p?.id}>
                   <td>
                     <div style={{ fontWeight: 700 }}>{p.studentFullName}</div>
                     <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{p.studentRollNumber}</div>

@@ -48,8 +48,8 @@ export function StudentOffersView() {
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1.5rem' }}>
-          {placements.map((p) => (
-            <div key={p.id} className="card" style={{ background: 'linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%)', border: '2px solid #86efac', boxShadow: '0 8px 24px rgba(16, 185, 129, 0.12)' }}>
+          {placements?.filter(Boolean).map((p) => (
+            <div key={p?.id} className="card" style={{ background: 'linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%)', border: '2px solid #86efac', boxShadow: '0 8px 24px rgba(16, 185, 129, 0.12)' }}>
               
               <div className="flex-between mb-3">
                 <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: '#d1fae5', color: '#059669', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

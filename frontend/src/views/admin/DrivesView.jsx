@@ -50,10 +50,12 @@ export function DrivesView() {
         api.getDrives(),
         api.getCompanies()
       ]);
-      setDrives(drivesData);
-      setCompanies(companiesData);
-      if (companiesData.length > 0 && !formData.companyId) {
-        setFormData(prev => ({ ...prev, companyId: companiesData[0].id }));
+      const validDrives = Array.isArray(drivesData) ? drivesData.filter(Boolean) : [];
+      const validCompanies = Array.isArray(companiesData) ? companiesData.filter(Boolean) : [];
+      setDrives(validDrives);
+      setCompanies(validCompanies);
+      if (validCompanies.length > 0 && validCompanies[0]?.id && !formData.companyId) {
+        setFormData(prev => ({ ...prev, companyId: validCompanies[0].id }));
       }
     } catch (err) {
       setError(err.message || 'Failed to load placement drives');
@@ -202,16 +204,16 @@ export function DrivesView() {
             No placement drives created yet. Click "Create Placement Drive" to get started.
           </div>
         ) : (
-          drives.map((d) => (
-            <div key={d.id} className="card" style={{ position: 'relative', overflow: 'hidden' }}>
+          drives?.filter(Boolean).map((d) => (
+            <div key={d?.id} className="card" style={{ position: 'relative', overflow: 'hidden' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
                 <div style={{ flex: 1, minWidth: '280px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                    <span className={`badge badge-${d.status.toLowerCase()}`}>
-                      {d.status}
+                    <span className={`badge badge-${d?.status?.toLowerCase() || 'open'}`}>
+                      {d?.status}
                     </span>
                     <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)' }}>
-                      {d.companyName}
+                      {d?.companyName}
                     </span>
                   </div>
 
@@ -384,8 +386,8 @@ export function DrivesView() {
                   value={formData.companyId}
                   onChange={(e) => setFormData({ ...formData, companyId: e.target.value })}
                 >
-                  {companies.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name} ({c.industry || 'Tech'})</option>
+                  {companies?.filter(Boolean).map((c) => (
+                    <option key={c?.id} value={c?.id}>{c?.name} ({c?.industry || 'Tech'})</option>
                   ))}
                 </select>
               </div>

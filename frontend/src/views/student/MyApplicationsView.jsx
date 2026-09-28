@@ -59,8 +59,8 @@ export function MyApplicationsView() {
             You have not submitted any applications yet. Explore available placement drives to apply!
           </div>
         ) : (
-          applications.map((app) => (
-            <div key={app.id} className="card" style={{ position: 'relative' }}>
+          applications?.filter(Boolean).map((app) => (
+            <div key={app?.id} className="card" style={{ position: 'relative' }}>
               
               {/* Header */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
@@ -109,8 +109,8 @@ export function MyApplicationsView() {
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    {app.interviewStages.map((stage) => (
-                      <div key={stage.id} style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '0.875rem' }}>
+                    {app.interviewStages?.filter(Boolean).map((stage) => (
+                      <div key={stage?.id} style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '0.875rem' }}>
                         <div className="flex-between mb-1">
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                             <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#e0e7ff', color: '#4f46e5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>

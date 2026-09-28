@@ -172,8 +172,8 @@ export function ApplicationsView() {
               onChange={(e) => setSelectedDriveId(e.target.value)}
             >
               <option value="ALL">All Placement Drives</option>
-              {drives.map(d => (
-                <option key={d.id} value={d.id}>{d.title} ({d.companyName})</option>
+              {drives?.filter(Boolean).map(d => (
+                <option key={d?.id} value={d?.id}>{d?.title} ({d?.companyName})</option>
               ))}
             </select>
           </div>
@@ -216,10 +216,10 @@ export function ApplicationsView() {
               ) : filtered.length === 0 ? (
                 <tr><td colSpan="4" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>No applications found.</td></tr>
               ) : (
-                filtered.map((app) => (
+                filtered?.filter(Boolean).map((app) => (
                   <tr 
-                    key={app.id} 
-                    style={{ cursor: 'pointer', background: selectedApp?.id === app.id ? '#eef2ff' : 'inherit' }}
+                    key={app?.id} 
+                    style={{ cursor: 'pointer', background: selectedApp?.id === app?.id ? '#eef2ff' : 'inherit' }}
                     onClick={() => handleSelectApplication(app)}
                   >
                     <td>
@@ -306,8 +306,8 @@ export function ApplicationsView() {
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                  {selectedApp.interviewStages.map((stage) => (
-                    <div key={stage.id} style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '0.875rem', boxShadow: 'var(--shadow-sm)' }}>
+                  {selectedApp.interviewStages?.filter(Boolean).map((stage) => (
+                    <div key={stage?.id} style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '10px', padding: '0.875rem', boxShadow: 'var(--shadow-sm)' }}>
                       <div className="flex-between mb-1">
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#e0e7ff', color: '#4f46e5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', fontWeight: 700 }}>
