@@ -23,6 +23,9 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const response = await api.login({ email, password });
+    if (!response || !response.token) {
+      throw new Error(response?.message || 'Login failed. Invalid response received from server.');
+    }
     const userData = {
       id: response.id,
       email: response.email,

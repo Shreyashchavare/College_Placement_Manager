@@ -1,10 +1,25 @@
-const rawBase = import.meta.env.VITE_API_BASE_URL || '/api';
-const API_BASE = rawBase.endsWith('/api') ? rawBase : (rawBase.startsWith('http') ? `${rawBase}/api` : rawBase);
+function getApiBase() {
+  const envUrl = (import.meta.env.VITE_API_BASE_URL || '').trim();
+  if (!envUrl || envUrl === '/api') {
+    return '/api';
+  }
+  let url = envUrl;
+  if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('/')) {
+    url = `https://${url}`;
+  }
+  if (url.startsWith('http')) {
+    return url.endsWith('/api') ? url : (url.endsWith('/') ? `${url}api` : `${url}/api`);
+  }
+  return url;
+}
+
+const API_BASE = getApiBase();
 
 async function request(endpoint, options = {}) {
   const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
     ...options.headers,
   };
 
@@ -12,23 +27,35 @@ async function request(endpoint, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE}${endpoint}`, {
-    ...options,
-    headers,
-  });
+  let response;
+  try {
+    response = await fetch(`${API_BASE}${endpoint}`, {
+      ...options,
+      headers,
+    });
+  } catch (netErr) {
+    throw new Error(`Cannot connect to backend server at ${API_BASE}. Please ensure backend is running.`);
+  }
 
   if (response.status === 204) {
     return null;
   }
 
-  const data = await response.json().catch(() => null);
+  const contentType = response.headers.get('content-type') || '';
+  let data = null;
+
+  if (contentType.includes('application/json')) {
+    data = await response.json().catch(() => null);
+  } else {
+    const text = await response.text().catch(() => '');
+    if (response.ok) {
+      throw new Error(`Invalid response from server: expected JSON but received ${contentType || 'HTML'}.`);
+    }
+    throw new Error(text || `Request failed with status ${response.status}`);
+  }
 
   if (!response.ok) {
     const errorMsg = data?.message || data?.error || `Request failed with status ${response.status}`;
-    if (response.status === 401) {
-      // Unauthenticated -> trigger logout if needed
-      // localStorage.removeItem('token');
-    }
     throw new Error(errorMsg);
   }
 
